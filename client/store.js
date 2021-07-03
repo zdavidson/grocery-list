@@ -7,6 +7,7 @@ const SET_VISIBILITY_FILTER = "SET_VISIBILITY_FILTER";
 const SHOW_ALL = "SHOW_ALL";
 const SHOW_BOUGHT = "SHOW_BOUGHT";
 const SHOW_ACTIVE = "SHOW_ACTIVE";
+const SET_QUANTITY = "SET_QUANTITY";
 
 let nextId = 0;
 export const addGrocery = (text) => ({
@@ -25,6 +26,11 @@ export const setVisibilityFilter = (visibilityFilter) => ({
   visibilityFilter,
 });
 
+export const setQuantity = (id, quantity) => ({
+  type: SET_QUANTITY,
+  quantity,
+});
+
 const initialState = { groceries: [], visibilityFilter: SHOW_ALL };
 
 const reducer = (state = initialState, action) => {
@@ -38,7 +44,7 @@ const reducer = (state = initialState, action) => {
       return { ...state, groceries: [...state.groceries, newGrocery] };
 
     case TOGGLE_GROCERY:
-      const groceries = state.groceries.map((grocery) => {
+      let groceries = state.groceries.map((grocery) => {
         if (grocery.id === action.id) {
           return { ...grocery, bought: !grocery.bought };
         } else {
@@ -49,6 +55,16 @@ const reducer = (state = initialState, action) => {
 
     case SET_VISIBILITY_FILTER:
       return { ...state, visibilityFilter: action.visibilityFilter };
+
+    case SET_QUANTITY:
+      groceries = state.groceries.map((grocery) => {
+        if (grocery.id === action.id) {
+          return { ...grocery, quantity: action.quantity };
+        } else {
+          return grocery;
+        }
+      });
+      return { ...state, groceries };
 
     default:
       return state;
